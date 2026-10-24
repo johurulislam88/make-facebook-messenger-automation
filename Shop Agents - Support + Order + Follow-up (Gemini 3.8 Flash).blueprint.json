@@ -1,0 +1,1588 @@
+{
+    "name": "Shop Agents - Support + Order + Follow-up (Gemini 3.8 Flash)",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3953284,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "Customer Webhook (type: support / order / followup)"
+                }
+            }
+        },
+        {
+            "id": 2,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "variables": [
+                    {
+                        "name": "shop_name",
+                        "value": "Wijdanlifestyle"
+                    },
+                    {
+                        "name": "shop_info",
+                        "value": "[এটি উদাহরণ - নিজের আসল তথ্য দিয়ে বদলান]\nপণ্য ও দাম: খাঁটি সরিষার তেল ১ লিটার ৫৫০ টাকা; খাঁটি ঘি ৫০০ গ্রাম ১২০০ টাকা; সুন্দরবনের মধু ১ কেজি ৯০০ টাকা।\nডেলিভারি: ঢাকার ভেতরে ৬০ টাকা, ঢাকার বাইরে ১২০ টাকা। সময় ২ থেকে ৪ দিন।\nপেমেন্ট: ক্যাশ অন ডেলিভারি ও বিকাশ।\nরিটার্ন: পণ্য নষ্ট বা ভুল হলে ৩ দিনের মধ্যে জানালে বদলে দেওয়া হবে।"
+                    },
+                    {
+                        "name": "tg_token",
+                        "value": "8807246993:AAE-sTD7EdT15S-rjD3djEueaM-vvWkqEOw"
+                    },
+                    {
+                        "name": "tg_chat_id",
+                        "value": "8976165116"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Settings - Shop Info"
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "93e05fc505a15df9"
+                },
+                "restore": {
+                    "expect": {
+                        "variables": {
+                            "items": [
+                                {
+                                    "value": {
+                                        "collapsed": true
+                                    }
+                                },
+                                {
+                                    "value": {
+                                        "collapsed": true
+                                    }
+                                },
+                                null,
+                                {
+                                    "name": {
+                                        "collapsed": true
+                                    },
+                                    "value": {
+                                        "collapsed": true
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Variable name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "value",
+                                    "type": "any",
+                                    "label": "Variable value"
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Variable"
+                        },
+                        "type": "array",
+                        "label": "Variables",
+                        "validate": {
+                            "unique": {
+                                "by": "name"
+                            },
+                            "minItems": 1
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "shop_name",
+                        "type": "any",
+                        "label": "shop_name"
+                    },
+                    {
+                        "name": "shop_info",
+                        "type": "any",
+                        "label": "shop_info"
+                    },
+                    {
+                        "name": "tg_token",
+                        "type": "any",
+                        "label": "tg_token"
+                    },
+                    {
+                        "name": "tg_chat_id",
+                        "type": "any",
+                        "label": "tg_chat_id"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "parameters": {},
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 10,
+                            "module": "gemini-ai:simpleTextPrompt",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Support (default)",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.type}}",
+                                            "b": "order",
+                                            "o": "text:notequal"
+                                        },
+                                        {
+                                            "a": "{{1.type}}",
+                                            "b": "followup",
+                                            "o": "text:notequal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "model": "gemini-3.8-flash",
+                                "textPrompt": "তুমি {{2.shop_name}} নামের একটি অনলাইন শপের বন্ধুসুলভ কাস্টমার সাপোর্ট সহকারী। কাস্টমারের মেসেজের উত্তর বাংলায় (কাস্টমার ইংরেজিতে লিখলে ইংরেজিতে) ছোট ও ভদ্রভাবে দাও। শুধু নিচের দোকানের তথ্য থেকে উত্তর দাও, তথ্য না থাকলে কখনো বানিয়ে বলবে না। কাস্টমার অর্ডার দিতে চাইলে তার নাম, ফোন নম্বর, পূর্ণ ঠিকানা, পণ্য ও পরিমাণ জানতে চাও। যদি উত্তর দিতে না পারো, কাস্টমার রেগে থাকে বা মানুষের সাথে কথা বলতে চায়, তাহলে বলো যে আমাদের টিম শীঘ্রই যোগাযোগ করবে এবং উত্তরের একদম শেষে [HUMAN] লিখো।\n\nদোকানের তথ্য:\n{{2.shop_info}}\n\nকাস্টমারের নাম: {{1.name}}\nকাস্টমারের মেসেজ: {{1.message}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": -300,
+                                    "name": "Gemini - Support Reply"
+                                }
+                            },
+                            "onerror": [
+                                {
+                                    "id": 13,
+                                    "module": "gateway:WebhookRespond",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "body": "ধন্যবাদ! আপনার মেসেজ পেয়েছি। আমাদের টিম খুব শীঘ্রই আপনার সাথে যোগাযোগ করবে।",
+                                        "status": "200",
+                                        "headers": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "text/plain; charset=utf-8"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 900,
+                                            "y": -100,
+                                            "name": "Fallback reply"
+                                        },
+                                        "setupValidation": {
+                                            "result": {
+                                                "valid": true,
+                                                "fields": []
+                                            },
+                                            "version": 1,
+                                            "configuration": "50602d1989043ed9"
+                                        },
+                                        "restore": {
+                                            "expect": {
+                                                "headers": {
+                                                    "mode": "chose",
+                                                    "items": [
+                                                        null
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "expect": [
+                                            {
+                                                "name": "status",
+                                                "type": "uinteger",
+                                                "label": "Status",
+                                                "required": true,
+                                                "validate": {
+                                                    "min": 100
+                                                }
+                                            },
+                                            {
+                                                "name": "body",
+                                                "type": "any",
+                                                "label": "Body"
+                                            },
+                                            {
+                                                "name": "headers",
+                                                "spec": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 256
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 4096
+                                                        }
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "Custom headers",
+                                                "validate": {
+                                                    "maxItems": 16
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": 14,
+                                    "module": "builtin:Break",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "count": 1,
+                                        "retry": false,
+                                        "interval": 1
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1225,
+                                            "y": -58,
+                                            "name": "Break - store failed run"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 11,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "body": "{{replace(10.result; \"[HUMAN]\"; \"\")}}",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain; charset=utf-8"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": -300,
+                                    "name": "Reply to customer"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "b1ad2113610b817a"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "headers": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null
+                                            ]
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "status",
+                                        "type": "uinteger",
+                                        "label": "Status",
+                                        "required": true,
+                                        "validate": {
+                                            "min": 100
+                                        }
+                                    },
+                                    {
+                                        "name": "body",
+                                        "type": "any",
+                                        "label": "Body"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 256
+                                                }
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Custom headers",
+                                        "validate": {
+                                            "maxItems": 16
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": true,
+                                "useNewZLibDeCompress": true
+                            },
+                            "filter": {
+                                "name": "Only when human needed",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{10.result}}",
+                                            "b": "[HUMAN]",
+                                            "o": "text:contain"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "ca": "",
+                                "qs": [
+                                    {
+                                        "name": "chat_id",
+                                        "value": "{{2.tg_chat_id}}"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "value": "HUMAN NEEDED | {{1.name}} | {{1.message}}"
+                                    }
+                                ],
+                                "url": "https://api.telegram.org/bot{{2.tg_token}}/sendMessage",
+                                "data": "",
+                                "gzip": true,
+                                "method": "get",
+                                "headers": [],
+                                "timeout": "30",
+                                "useMtls": false,
+                                "authPass": "",
+                                "authUser": "",
+                                "bodyType": "raw",
+                                "contentType": "",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": -300,
+                                    "name": "Telegram - Human Needed"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "ea56ddce3ccf3bc1"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "qs": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null,
+                                                null
+                                            ]
+                                        },
+                                        "method": {
+                                            "mode": "chose",
+                                            "label": "GET"
+                                        },
+                                        "headers": {
+                                            "mode": "chose"
+                                        },
+                                        "bodyType": {
+                                            "label": "Raw"
+                                        },
+                                        "contentType": {
+                                            "label": "Empty"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "handleErrors",
+                                        "type": "boolean",
+                                        "label": "Evaluate all states as errors (except for 2xx and 3xx )",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useNewZLibDeCompress",
+                                        "type": "hidden"
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "url",
+                                        "type": "url",
+                                        "label": "URL",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "serializeUrl",
+                                        "type": "boolean",
+                                        "label": "Serialize URL",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "method",
+                                        "type": "select",
+                                        "label": "Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "get",
+                                                "head",
+                                                "post",
+                                                "put",
+                                                "patch",
+                                                "delete",
+                                                "options"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Headers"
+                                    },
+                                    {
+                                        "name": "qs",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Query String"
+                                    },
+                                    {
+                                        "name": "bodyType",
+                                        "type": "select",
+                                        "label": "Body type",
+                                        "validate": {
+                                            "enum": [
+                                                "raw",
+                                                "x_www_form_urlencoded",
+                                                "multipart_form_data"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "parseResponse",
+                                        "type": "boolean",
+                                        "label": "Parse response",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "authUser",
+                                        "type": "text",
+                                        "label": "User name"
+                                    },
+                                    {
+                                        "name": "authPass",
+                                        "type": "password",
+                                        "label": "Password"
+                                    },
+                                    {
+                                        "name": "timeout",
+                                        "type": "uinteger",
+                                        "label": "Timeout",
+                                        "validate": {
+                                            "max": 300,
+                                            "min": 1
+                                        }
+                                    },
+                                    {
+                                        "name": "shareCookies",
+                                        "type": "boolean",
+                                        "label": "Share cookies with other HTTP modules",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "ca",
+                                        "type": "cert",
+                                        "label": "Self-signed certificate"
+                                    },
+                                    {
+                                        "name": "rejectUnauthorized",
+                                        "type": "boolean",
+                                        "label": "Reject connections that are using unverified (self-signed) certificates",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "followRedirect",
+                                        "type": "boolean",
+                                        "label": "Follow redirect",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useQuerystring",
+                                        "type": "boolean",
+                                        "label": "Disable serialization of multiple same query string keys as arrays",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "gzip",
+                                        "type": "boolean",
+                                        "label": "Request compressed content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useMtls",
+                                        "type": "boolean",
+                                        "label": "Use Mutual TLS",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "contentType",
+                                        "type": "select",
+                                        "label": "Content type",
+                                        "validate": {
+                                            "enum": [
+                                                "text/plain",
+                                                "application/json",
+                                                "application/xml",
+                                                "text/xml",
+                                                "text/html",
+                                                "custom"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "data",
+                                        "type": "buffer",
+                                        "label": "Request content"
+                                    },
+                                    {
+                                        "name": "followAllRedirects",
+                                        "type": "boolean",
+                                        "label": "Follow all redirect",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "onerror": [
+                                {
+                                    "id": 15,
+                                    "module": "builtin:Ignore",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {},
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1500,
+                                            "y": -100,
+                                            "name": "Ignore (customer already answered)"
+                                        },
+                                        "restore": {}
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 20,
+                            "module": "gemini-ai:simpleTextPrompt",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "type = order",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.type}}",
+                                            "b": "order",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "model": "gemini-3.8-flash",
+                                "textPrompt": "তুমি {{2.shop_name}} শপের অর্ডার সহকারী। নিচের কাস্টমার মেসেজ থেকে অর্ডারের তথ্য বের করো: নাম, ফোন নম্বর, পূর্ণ ঠিকানা, পণ্য, পরিমাণ।\n\nদোকানের তথ্য:\n{{2.shop_info}}\n\nকাস্টমারের নাম: {{1.name}}\nকাস্টমারের মেসেজ: {{1.message}}\n\nশুধু একটি JSON অবজেক্ট দাও (কোনো মার্কডাউন নয়), যার কী হবে: complete (পাঁচটি তথ্যই পাওয়া গেলে true, নইলে false), reply (বাংলায় কাস্টমারকে উত্তর: complete হলে অর্ডারের সারাংশ ও ডেলিভারি চার্জসহ মোট দাম বলে নিশ্চিত করো; না হলে কোন তথ্য বাকি তা ভদ্রভাবে চাও), summary (এক লাইনে অর্ডারের সারাংশ: নাম, ফোন, ঠিকানা, পণ্য, পরিমাণ)।"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 959,
+                                    "y": 243,
+                                    "name": "Gemini - Read Order"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "bf3596adacb956d1"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "model": {
+                                            "label": "Gemini 3.8 Flash (Paid plans only)Best reasoning and coding model yet, built for long-horizon coding and autonomous agents"
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "model",
+                                        "type": "select",
+                                        "label": "Model",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "gemini-2.5-flash",
+                                                "gemini-4-argon",
+                                                "gemini-3.8-flash",
+                                                "gemini-3.7-flash",
+                                                "gemini-3.6-flash",
+                                                "gemini-3.5-flash",
+                                                "gemini-3.1-pro-preview",
+                                                "gemini-3-flash-preview",
+                                                "gemini-2.5-pro"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "textPrompt",
+                                        "type": "text",
+                                        "label": "Text prompt",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "onerror": [
+                                {
+                                    "id": 24,
+                                    "module": "gateway:WebhookRespond",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "body": "ধন্যবাদ! আপনার অর্ডারের মেসেজ পেয়েছি। আমাদের টিম শীঘ্রই কনফার্ম করবে।",
+                                        "status": "200",
+                                        "headers": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "text/plain; charset=utf-8"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 934,
+                                            "y": 482,
+                                            "name": "Fallback reply"
+                                        },
+                                        "setupValidation": {
+                                            "result": {
+                                                "valid": true,
+                                                "fields": []
+                                            },
+                                            "version": 1,
+                                            "configuration": "d9f63c27bb162e85"
+                                        },
+                                        "restore": {
+                                            "expect": {
+                                                "headers": {
+                                                    "mode": "chose",
+                                                    "items": [
+                                                        null
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "expect": [
+                                            {
+                                                "name": "status",
+                                                "type": "uinteger",
+                                                "label": "Status",
+                                                "required": true,
+                                                "validate": {
+                                                    "min": 100
+                                                }
+                                            },
+                                            {
+                                                "name": "body",
+                                                "type": "any",
+                                                "label": "Body"
+                                            },
+                                            {
+                                                "name": "headers",
+                                                "spec": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 256
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 4096
+                                                        }
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "Custom headers",
+                                                "validate": {
+                                                    "maxItems": 16
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": 25,
+                                    "module": "builtin:Break",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "count": 1,
+                                        "retry": false,
+                                        "interval": 1
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1200,
+                                            "y": 500,
+                                            "name": "Break - store failed run"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 21,
+                            "module": "json:ParseJSON",
+                            "version": 1,
+                            "parameters": {
+                                "type": ""
+                            },
+                            "mapper": {
+                                "json": "{{replace(replace(20.result; \"```json\"; \"\"); \"```\"; \"\")}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1210,
+                                    "y": 283,
+                                    "name": "Parse Order JSON"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "be68a31a1625a237"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "type": {
+                                            "label": "Choose a data structure"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "type",
+                                        "type": "udt",
+                                        "label": "Data structure"
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "json",
+                                        "type": "text",
+                                        "label": "JSON string",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "onerror": [
+                                {
+                                    "id": 26,
+                                    "module": "gateway:WebhookRespond",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "body": "ধন্যবাদ! আপনার অর্ডারের মেসেজ পেয়েছি। আমাদের টিম শীঘ্রই কনফার্ম করবে।",
+                                        "status": "200",
+                                        "headers": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "text/plain; charset=utf-8"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1181,
+                                            "y": 490,
+                                            "name": "Fallback reply"
+                                        },
+                                        "setupValidation": {
+                                            "result": {
+                                                "valid": true,
+                                                "fields": []
+                                            },
+                                            "version": 1,
+                                            "configuration": "d9f63c27bb162e85"
+                                        },
+                                        "restore": {
+                                            "expect": {
+                                                "headers": {
+                                                    "mode": "chose",
+                                                    "items": [
+                                                        null
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "expect": [
+                                            {
+                                                "name": "status",
+                                                "type": "uinteger",
+                                                "label": "Status",
+                                                "required": true,
+                                                "validate": {
+                                                    "min": 100
+                                                }
+                                            },
+                                            {
+                                                "name": "body",
+                                                "type": "any",
+                                                "label": "Body"
+                                            },
+                                            {
+                                                "name": "headers",
+                                                "spec": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 256
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 4096
+                                                        }
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "Custom headers",
+                                                "validate": {
+                                                    "maxItems": 16
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": 27,
+                                    "module": "builtin:Break",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "count": 1,
+                                        "retry": false,
+                                        "interval": 1
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1549,
+                                            "y": 553,
+                                            "name": "Break - store failed run"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 22,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "body": "{{21.reply}}",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain; charset=utf-8"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": 300,
+                                    "name": "Reply to customer"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "981b2d0e953e92c7"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "headers": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null
+                                            ]
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "status",
+                                        "type": "uinteger",
+                                        "label": "Status",
+                                        "required": true,
+                                        "validate": {
+                                            "min": 100
+                                        }
+                                    },
+                                    {
+                                        "name": "body",
+                                        "type": "any",
+                                        "label": "Body"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 256
+                                                }
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Custom headers",
+                                        "validate": {
+                                            "maxItems": 16
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 23,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": true,
+                                "useNewZLibDeCompress": true
+                            },
+                            "filter": {
+                                "name": "Only complete orders",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{21.complete}}",
+                                            "b": "true",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "ca": "",
+                                "qs": [
+                                    {
+                                        "name": "chat_id",
+                                        "value": "{{2.tg_chat_id}}"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "value": "NEW ORDER | {{21.summary}}"
+                                    }
+                                ],
+                                "url": "https://api.telegram.org/bot{{2.tg_token}}/sendMessage",
+                                "data": "",
+                                "gzip": true,
+                                "method": "get",
+                                "headers": [],
+                                "timeout": "30",
+                                "useMtls": false,
+                                "authPass": "",
+                                "authUser": "",
+                                "bodyType": "raw",
+                                "contentType": "",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1800,
+                                    "y": 300,
+                                    "name": "Telegram - New Order"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "a3ab1911618215c0"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "qs": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null,
+                                                null
+                                            ]
+                                        },
+                                        "method": {
+                                            "mode": "chose",
+                                            "label": "GET"
+                                        },
+                                        "headers": {
+                                            "mode": "chose"
+                                        },
+                                        "bodyType": {
+                                            "label": "Raw"
+                                        },
+                                        "contentType": {
+                                            "label": "Empty"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "handleErrors",
+                                        "type": "boolean",
+                                        "label": "Evaluate all states as errors (except for 2xx and 3xx )",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useNewZLibDeCompress",
+                                        "type": "hidden"
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "url",
+                                        "type": "url",
+                                        "label": "URL",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "serializeUrl",
+                                        "type": "boolean",
+                                        "label": "Serialize URL",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "method",
+                                        "type": "select",
+                                        "label": "Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "get",
+                                                "head",
+                                                "post",
+                                                "put",
+                                                "patch",
+                                                "delete",
+                                                "options"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Headers"
+                                    },
+                                    {
+                                        "name": "qs",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Query String"
+                                    },
+                                    {
+                                        "name": "bodyType",
+                                        "type": "select",
+                                        "label": "Body type",
+                                        "validate": {
+                                            "enum": [
+                                                "raw",
+                                                "x_www_form_urlencoded",
+                                                "multipart_form_data"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "parseResponse",
+                                        "type": "boolean",
+                                        "label": "Parse response",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "authUser",
+                                        "type": "text",
+                                        "label": "User name"
+                                    },
+                                    {
+                                        "name": "authPass",
+                                        "type": "password",
+                                        "label": "Password"
+                                    },
+                                    {
+                                        "name": "timeout",
+                                        "type": "uinteger",
+                                        "label": "Timeout",
+                                        "validate": {
+                                            "max": 300,
+                                            "min": 1
+                                        }
+                                    },
+                                    {
+                                        "name": "shareCookies",
+                                        "type": "boolean",
+                                        "label": "Share cookies with other HTTP modules",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "ca",
+                                        "type": "cert",
+                                        "label": "Self-signed certificate"
+                                    },
+                                    {
+                                        "name": "rejectUnauthorized",
+                                        "type": "boolean",
+                                        "label": "Reject connections that are using unverified (self-signed) certificates",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "followRedirect",
+                                        "type": "boolean",
+                                        "label": "Follow redirect",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useQuerystring",
+                                        "type": "boolean",
+                                        "label": "Disable serialization of multiple same query string keys as arrays",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "gzip",
+                                        "type": "boolean",
+                                        "label": "Request compressed content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "useMtls",
+                                        "type": "boolean",
+                                        "label": "Use Mutual TLS",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "contentType",
+                                        "type": "select",
+                                        "label": "Content type",
+                                        "validate": {
+                                            "enum": [
+                                                "text/plain",
+                                                "application/json",
+                                                "application/xml",
+                                                "text/xml",
+                                                "text/html",
+                                                "custom"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "data",
+                                        "type": "buffer",
+                                        "label": "Request content"
+                                    },
+                                    {
+                                        "name": "followAllRedirects",
+                                        "type": "boolean",
+                                        "label": "Follow all redirect",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "onerror": [
+                                {
+                                    "id": 28,
+                                    "module": "builtin:Ignore",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {},
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1800,
+                                            "y": 500,
+                                            "name": "Ignore (customer already answered)"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 30,
+                            "module": "gemini-ai:simpleTextPrompt",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "type = followup",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.type}}",
+                                            "b": "followup",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "model": "gemini-3.8-flash",
+                                "textPrompt": "তুমি {{2.shop_name}} শপের ফলো-আপ সহকারী। কাস্টমার {{1.name}} আমাদের থেকে {{1.product}} কিনেছেন এবং ডেলিভারির {{1.days}} দিন পার হয়েছে। তাকে একটি ছোট, আন্তরিক বাংলা মেসেজ লেখো: পণ্য কেমন লাগছে জিজ্ঞেস করো, একটি রিভিউ বা মতামত দিতে অনুরোধ করো এবং পণ্য শেষ হয়ে এলে আবার অর্ডারের কথা বলো। সর্বোচ্চ ৪ লাইন। শুধু মেসেজটুকু লেখো।"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 800,
+                                    "name": "Gemini - Follow-up Message"
+                                }
+                            },
+                            "onerror": [
+                                {
+                                    "id": 32,
+                                    "module": "gateway:WebhookRespond",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "body": "আমাদের থেকে কেনাকাটার জন্য ধন্যবাদ! পণ্যটি কেমন লাগল জানালে খুশি হব।",
+                                        "status": 200,
+                                        "headers": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "text/plain; charset=utf-8"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 878,
+                                            "y": 1083,
+                                            "name": "Fallback reply"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": 33,
+                                    "module": "builtin:Break",
+                                    "version": 1,
+                                    "parameters": {},
+                                    "mapper": {
+                                        "retry": false
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1216,
+                                            "y": 1133,
+                                            "name": "Break - store failed run"
+                                        },
+                                        "setupValidation": {
+                                            "result": {
+                                                "valid": true,
+                                                "fields": []
+                                            },
+                                            "version": 1,
+                                            "configuration": "5abecd043d0f00a6"
+                                        },
+                                        "restore": {
+                                            "expect": {
+                                                "retry": {
+                                                    "mode": "chose"
+                                                }
+                                            }
+                                        },
+                                        "expect": [
+                                            {
+                                                "name": "retry",
+                                                "type": "boolean",
+                                                "label": "Retry automatically",
+                                                "required": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 31,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "body": "{{30.result}}",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain; charset=utf-8"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 800,
+                                    "name": "Reply (follow-up message)"
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "22123eca8b24407e"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "headers": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null
+                                            ]
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "status",
+                                        "type": "uinteger",
+                                        "label": "Status",
+                                        "required": true,
+                                        "validate": {
+                                            "min": 100
+                                        }
+                                    },
+                                    {
+                                        "name": "body",
+                                        "type": "any",
+                                        "label": "Body"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": [
+                                            {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 256
+                                                }
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 4096
+                                                }
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Custom headers",
+                                        "validate": {
+                                            "maxItems": 16
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 5,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": true,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}

@@ -1,0 +1,1119 @@
+{
+    "name": "FIXED - Facebook AI Agent - Comments + Messenger (Gemini)",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3923013,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -600,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Facebook AI Agent"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "variables": [
+                    {
+                        "name": "VERIFY_TOKEN",
+                        "value": "myverifytoken123"
+                    },
+                    {
+                        "name": "PAGE_ID",
+                        "value": "590364324150678"
+                    },
+                    {
+                        "name": "PAGE_TOKEN",
+                        "value": "EAAgOdI8dvaYBS7GuSgSwzxdDywkMAP3mKgQZBrLEblxZCdpkmn5ofLtA60VEISBPTqfPESEEFEgfXzE9irm9Jg6I9dUS1ZAXTIrvCt6F5HHopq2UK403k6vgG9GtJsXGaSvgZAIvWXoz8HQtWmwEDyDCNuwgSpLsfLUxTD6bIpd7KEZCbMYE1Dw9HNw3rcIu5mSem1QZDZD"
+                    },
+                    {
+                        "name": "GEMINI_KEY",
+                        "value": "AQ.Ab8RN6LMRAoi8Wkcx-oxB7E6S-E8sbBrb7EzwBeCJhfClqtrSQ"
+                    },
+                    {
+                        "name": "GEMINI_MODEL",
+                        "value": "gemini-2.5-flash"
+                    },
+                    {
+                        "name": "SHEET_CSV_URL",
+                        "value": "https://docs.google.com/spreadsheets/d/1gsA8_rKd8j9bUbeohgst4YIgVMtreAy0UqC6Km-Fmr0/export?format=csv"
+                    },
+                    {
+                        "name": "BUSINESS_NAME",
+                        "value": "WijdanLifestyle"
+                    },
+                    {
+                        "name": "BUSINESS_RULES",
+                        "value": "তুমি WijdanLifestyle নামের অনলাইন অর্গানিক পণ্যের দোকানের বিনয়ী সেলস অ্যাসিস্ট্যান্ট। সবসময় সহজ বাংলায় ছোট ও বন্ধুত্বপূর্ণ উত্তর দাও, কোনো মার্কডাউন বা তারকা চিহ্ন ব্যবহার করো না, লাইন ব্রেক ছাড়া এক অনুচ্ছেদে লেখো। শুধুমাত্র নিচের প্রোডাক্ট ডেটা থেকে দাম, স্টক ও তথ্য বলো। ডেটায় না থাকলে বানিয়ে বলো না, বলো যে আমাদের প্রতিনিধি শীঘ্রই জানাবেন। কাস্টমার অর্ডার করতে চাইলে নাম, ফোন নম্বর ও পূর্ণ ঠিকানা চাও।"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": -300,
+                    "y": 0
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "type": "text",
+                                    "label": "Variable name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "value",
+                                    "type": "any",
+                                    "label": "Variable value"
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Variable"
+                        },
+                        "type": "array",
+                        "label": "Variables",
+                        "validate": {
+                            "unique": {
+                                "by": "name"
+                            },
+                            "minItems": 1
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "VERIFY_TOKEN",
+                        "type": "any",
+                        "label": "VERIFY_TOKEN"
+                    },
+                    {
+                        "name": "PAGE_ID",
+                        "type": "any",
+                        "label": "PAGE_ID"
+                    },
+                    {
+                        "name": "PAGE_TOKEN",
+                        "type": "any",
+                        "label": "PAGE_TOKEN"
+                    },
+                    {
+                        "name": "GEMINI_KEY",
+                        "type": "any",
+                        "label": "GEMINI_KEY"
+                    },
+                    {
+                        "name": "GEMINI_MODEL",
+                        "type": "any",
+                        "label": "GEMINI_MODEL"
+                    },
+                    {
+                        "name": "SHEET_CSV_URL",
+                        "type": "any",
+                        "label": "SHEET_CSV_URL"
+                    },
+                    {
+                        "name": "BUSINESS_NAME",
+                        "type": "any",
+                        "label": "BUSINESS_NAME"
+                    },
+                    {
+                        "name": "BUSINESS_RULES",
+                        "type": "any",
+                        "label": "BUSINESS_RULES"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": -50,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 4,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Meta verify",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.`hub.mode`}}",
+                                            "b": "subscribe",
+                                            "o": "text:equal"
+                                        },
+                                        {
+                                            "a": "{{1.`hub.verify_token`}}",
+                                            "b": "{{2.VERIFY_TOKEN}}",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "body": "{{1.`hub.challenge`}}",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 0,
+                                    "y": -500
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 5,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Top-level new comment (not from page)",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.entry[1].changes[1].value.item}}",
+                                            "b": "comment",
+                                            "o": "text:equal"
+                                        },
+                                        {
+                                            "a": "{{1.entry[1].changes[1].value.verb}}",
+                                            "b": "add",
+                                            "o": "text:equal"
+                                        },
+                                        {
+                                            "a": "{{1.entry[1].changes[1].value.from.id}}",
+                                            "b": "{{2.PAGE_ID}}",
+                                            "o": "text:notequal"
+                                        },
+                                        {
+                                            "a": "{{1.entry[1].changes[1].value.parent_id}}",
+                                            "b": "{{1.entry[1].changes[1].value.post_id}}",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "body": "OK",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 0,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "module": "http:ActionGetFile",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "{{2.SHEET_CSV_URL}}",
+                                "gzip": true,
+                                "method": "get",
+                                "headers": [],
+                                "useMtls": false,
+                                "serializeUrl": false,
+                                "serveRawData": false,
+                                "shareCookies": false,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 300,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "module": "util:SetVariables",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "scope": "roundtrip",
+                                "variables": [
+                                    {
+                                        "name": "COMMENT_ESC",
+                                        "value": "{{replace(replace(ifempty(1.entry[1].changes[1].value.message; \"ছবি বা স্টিকার কমেন্ট\"); \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "https://generativelanguage.googleapis.com/v1beta/models/{{2.GEMINI_MODEL}}:generateContent",
+                                "data": "{\"systemInstruction\":{\"parts\":[{\"text\":\"{{2.BUSINESS_RULES}} প্রোডাক্টের ডেটা সংযুক্ত ফাইলে আছে, শুধু সেখান থেকে তথ্য দাও। এটি একটি ফেসবুক কমেন্ট। দুটি অংশ লেখো, মাঝখানে ### চিহ্ন দাও: প্রথম অংশ কমেন্টে পাবলিক রিপ্লাই (১ বাক্য, সংক্ষিপ্ত, ইনবক্স দেখতে বলো), দ্বিতীয় অংশ ইনবক্সে পাঠানো বিস্তারিত মেসেজ (দাম/তথ্যসহ)। ডবল কোটেশন চিহ্ন কখনো ব্যবহার করো না।\"}]},\"contents\":[{\"role\":\"user\",\"parts\":[{\"inline_data\":{\"mime_type\":\"text/plain\",\"data\":\"{{toString(6.data; base64)}}\"}},{\"text\":\"কাস্টমারের কমেন্ট: {{7.COMMENT_ESC}}\"}]}],\"generationConfig\":{\"temperature\":0.4}}",
+                                "gzip": true,
+                                "method": "post",
+                                "headers": [
+                                    {
+                                        "name": "x-goog-api-key",
+                                        "value": "{{2.GEMINI_KEY}}"
+                                    }
+                                ],
+                                "timeout": "",
+                                "useMtls": false,
+                                "bodyType": "raw",
+                                "contentType": "application/json",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "https://graph.facebook.com/v21.0/{{1.entry[1].changes[1].value.comment_id}}/likes",
+                                "gzip": true,
+                                "fields": [
+                                    {
+                                        "name": "access_token",
+                                        "value": "{{2.PAGE_TOKEN}}"
+                                    }
+                                ],
+                                "method": "post",
+                                "headers": [],
+                                "timeout": "",
+                                "useMtls": false,
+                                "bodyType": "x_www_form_urlencoded",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "https://graph.facebook.com/v21.0/{{1.entry[1].changes[1].value.comment_id}}/comments",
+                                "gzip": true,
+                                "fields": [
+                                    {
+                                        "name": "message",
+                                        "value": "{{trim(first(split(8.data.candidates[1].content.parts[1].text; \"###\")))}}"
+                                    },
+                                    {
+                                        "name": "access_token",
+                                        "value": "{{2.PAGE_TOKEN}}"
+                                    }
+                                ],
+                                "method": "post",
+                                "headers": [],
+                                "timeout": "",
+                                "useMtls": false,
+                                "bodyType": "x_www_form_urlencoded",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": -250
+                                }
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "module": "http:ActionSendData",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "https://graph.facebook.com/v21.0/{{2.PAGE_ID}}/messages",
+                                "gzip": true,
+                                "fields": [
+                                    {
+                                        "name": "recipient",
+                                        "value": "{\"comment_id\":\"{{1.entry[1].changes[1].value.comment_id}}\"}"
+                                    },
+                                    {
+                                        "name": "message",
+                                        "value": "{\"text\":\"{{replace(replace(trim(last(split(8.data.candidates[1].content.parts[1].text; \"###\"))); \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}\"}"
+                                    },
+                                    {
+                                        "name": "access_token",
+                                        "value": "{{2.PAGE_TOKEN}}"
+                                    }
+                                ],
+                                "method": "post",
+                                "headers": [],
+                                "timeout": "",
+                                "useMtls": false,
+                                "bodyType": "x_www_form_urlencoded",
+                                "serializeUrl": false,
+                                "shareCookies": false,
+                                "parseResponse": true,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1800,
+                                    "y": -250
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 12,
+                            "module": "gateway:WebhookRespond",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "Customer message (not echo/not page)",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.entry[1].messaging[1].message}}",
+                                            "o": "exist"
+                                        },
+                                        {
+                                            "a": "{{1.entry[1].messaging[1].sender.id}}",
+                                            "b": "{{2.PAGE_ID}}",
+                                            "o": "text:notequal"
+                                        },
+                                        {
+                                            "a": "{{1.entry[1].messaging[1].message.is_echo}}",
+                                            "o": "notexist"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "body": "OK",
+                                "status": "200",
+                                "headers": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "text/plain"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 0,
+                                    "y": 250
+                                }
+                            }
+                        },
+                        {
+                            "id": 13,
+                            "module": "http:ActionGetFile",
+                            "version": 3,
+                            "parameters": {
+                                "handleErrors": false
+                            },
+                            "mapper": {
+                                "qs": [],
+                                "url": "{{2.SHEET_CSV_URL}}",
+                                "gzip": true,
+                                "method": "get",
+                                "headers": [],
+                                "useMtls": false,
+                                "serializeUrl": false,
+                                "serveRawData": false,
+                                "shareCookies": false,
+                                "followRedirect": true,
+                                "useQuerystring": false,
+                                "followAllRedirects": false,
+                                "rejectUnauthorized": true
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 300,
+                                    "y": 250
+                                }
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "module": "util:SetVariables",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "scope": "roundtrip",
+                                "variables": [
+                                    {
+                                        "name": "TEXT_ESC",
+                                        "value": "{{replace(replace(ifempty(1.entry[1].messaging[1].message.text; \"\"); \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}"
+                                    }
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 250
+                                }
+                            }
+                        },
+                        {
+                            "id": 26,
+                            "module": "builtin:BasicRouter",
+                            "version": 1,
+                            "mapper": null,
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 250
+                                }
+                            },
+                            "routes": [
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 15,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "filter": {
+                                                "name": "Text",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{1.entry[1].messaging[1].message.text}}",
+                                                            "o": "exist"
+                                                        },
+                                                        {
+                                                            "a": "{{1.entry[1].messaging[1].message.attachments[1].type}}",
+                                                            "o": "notexist"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://generativelanguage.googleapis.com/v1beta/models/{{2.GEMINI_MODEL}}:generateContent",
+                                                "data": "{\"systemInstruction\":{\"parts\":[{\"text\":\"{{2.BUSINESS_RULES}} প্রোডাক্টের ডেটা সংযুক্ত ফাইলে আছে, শুধু সেখান থেকে তথ্য দাও। ডবল কোটেশন চিহ্ন কখনো ব্যবহার করো না।\"}]},\"contents\":[{\"role\":\"user\",\"parts\":[{\"inline_data\":{\"mime_type\":\"text/plain\",\"data\":\"{{toString(13.data; base64)}}\"}},{\"text\":\"কাস্টমারের মেসেজ: {{14.TEXT_ESC}}\"}]}],\"generationConfig\":{\"temperature\":0.4}}",
+                                                "gzip": true,
+                                                "method": "post",
+                                                "headers": [
+                                                    {
+                                                        "name": "x-goog-api-key",
+                                                        "value": "{{2.GEMINI_KEY}}"
+                                                    }
+                                                ],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "raw",
+                                                "contentType": "application/json",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 900,
+                                                    "y": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 16,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://graph.facebook.com/v21.0/me/messages",
+                                                "gzip": true,
+                                                "fields": [
+                                                    {
+                                                        "name": "recipient",
+                                                        "value": "{\"id\":\"{{1.entry[1].messaging[1].sender.id}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "messaging_type",
+                                                        "value": "RESPONSE"
+                                                    },
+                                                    {
+                                                        "name": "message",
+                                                        "value": "{\"text\":\"{{replace(replace(15.data.candidates[1].content.parts[1].text; \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "access_token",
+                                                        "value": "{{2.PAGE_TOKEN}}"
+                                                    }
+                                                ],
+                                                "method": "post",
+                                                "headers": [],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "x_www_form_urlencoded",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1500,
+                                                    "y": 0
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 17,
+                                            "module": "http:ActionGetFile",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "filter": {
+                                                "name": "Image",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{1.entry[1].messaging[1].message.attachments[1].type}}",
+                                                            "b": "image",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "{{1.entry[1].messaging[1].message.attachments[1].payload.url}}",
+                                                "gzip": true,
+                                                "method": "get",
+                                                "headers": [],
+                                                "useMtls": false,
+                                                "serializeUrl": false,
+                                                "serveRawData": false,
+                                                "shareCookies": false,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 900,
+                                                    "y": 150
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 18,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://generativelanguage.googleapis.com/v1beta/models/{{2.GEMINI_MODEL}}:generateContent",
+                                                "data": "{\"systemInstruction\":{\"parts\":[{\"text\":\"{{2.BUSINESS_RULES}} প্রোডাক্টের ডেটা সংযুক্ত ফাইলে আছে, শুধু সেখান থেকে তথ্য দাও। ডবল কোটেশন চিহ্ন কখনো ব্যবহার করো না।\"}]},\"contents\":[{\"role\":\"user\",\"parts\":[{\"inline_data\":{\"mime_type\":\"text/plain\",\"data\":\"{{toString(13.data; base64)}}\"}},{\"inline_data\":{\"mime_type\":\"image/jpeg\",\"data\":\"{{toString(17.data; base64)}}\"}},{\"text\":\"কাস্টমার এই ছবি/স্ক্রিনশট পাঠিয়েছে। ছবিতে কী আছে বুঝে (প্রোডাক্ট, দাম, পেমেন্ট প্রমাণ ইত্যাদি) প্রাসঙ্গিক উত্তর দাও।\"}]}],\"generationConfig\":{\"temperature\":0.4}}",
+                                                "gzip": true,
+                                                "method": "post",
+                                                "headers": [
+                                                    {
+                                                        "name": "x-goog-api-key",
+                                                        "value": "{{2.GEMINI_KEY}}"
+                                                    }
+                                                ],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "raw",
+                                                "contentType": "application/json",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": 150
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 19,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://graph.facebook.com/v21.0/me/messages",
+                                                "gzip": true,
+                                                "fields": [
+                                                    {
+                                                        "name": "recipient",
+                                                        "value": "{\"id\":\"{{1.entry[1].messaging[1].sender.id}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "messaging_type",
+                                                        "value": "RESPONSE"
+                                                    },
+                                                    {
+                                                        "name": "message",
+                                                        "value": "{\"text\":\"{{replace(replace(18.data.candidates[1].content.parts[1].text; \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "access_token",
+                                                        "value": "{{2.PAGE_TOKEN}}"
+                                                    }
+                                                ],
+                                                "method": "post",
+                                                "headers": [],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "x_www_form_urlencoded",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1500,
+                                                    "y": 150
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 20,
+                                            "module": "http:ActionGetFile",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "filter": {
+                                                "name": "Voice",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{1.entry[1].messaging[1].message.attachments[1].type}}",
+                                                            "b": "audio",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "{{1.entry[1].messaging[1].message.attachments[1].payload.url}}",
+                                                "gzip": true,
+                                                "method": "get",
+                                                "headers": [],
+                                                "useMtls": false,
+                                                "serializeUrl": false,
+                                                "serveRawData": false,
+                                                "shareCookies": false,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 900,
+                                                    "y": 300
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 21,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://generativelanguage.googleapis.com/v1beta/models/{{2.GEMINI_MODEL}}:generateContent",
+                                                "data": "{\"systemInstruction\":{\"parts\":[{\"text\":\"{{2.BUSINESS_RULES}} প্রোডাক্টের ডেটা সংযুক্ত ফাইলে আছে, শুধু সেখান থেকে তথ্য দাও। ডবল কোটেশন চিহ্ন কখনো ব্যবহার করো না।\"}]},\"contents\":[{\"role\":\"user\",\"parts\":[{\"inline_data\":{\"mime_type\":\"text/plain\",\"data\":\"{{toString(13.data; base64)}}\"}},{\"inline_data\":{\"mime_type\":\"audio/mp4\",\"data\":\"{{toString(20.data; base64)}}\"}},{\"text\":\"কাস্টমার ভয়েস মেসেজ পাঠিয়েছে। কী বলেছে বুঝে সেই অনুযায়ী উত্তর দাও।\"}]}],\"generationConfig\":{\"temperature\":0.4}}",
+                                                "gzip": true,
+                                                "method": "post",
+                                                "headers": [
+                                                    {
+                                                        "name": "x-goog-api-key",
+                                                        "value": "{{2.GEMINI_KEY}}"
+                                                    }
+                                                ],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "raw",
+                                                "contentType": "application/json",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": 300
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 22,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://graph.facebook.com/v21.0/me/messages",
+                                                "gzip": true,
+                                                "fields": [
+                                                    {
+                                                        "name": "recipient",
+                                                        "value": "{\"id\":\"{{1.entry[1].messaging[1].sender.id}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "messaging_type",
+                                                        "value": "RESPONSE"
+                                                    },
+                                                    {
+                                                        "name": "message",
+                                                        "value": "{\"text\":\"{{replace(replace(21.data.candidates[1].content.parts[1].text; \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "access_token",
+                                                        "value": "{{2.PAGE_TOKEN}}"
+                                                    }
+                                                ],
+                                                "method": "post",
+                                                "headers": [],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "x_www_form_urlencoded",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1500,
+                                                    "y": 300
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "flow": [
+                                        {
+                                            "id": 23,
+                                            "module": "http:ActionGetFile",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "filter": {
+                                                "name": "Video",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{1.entry[1].messaging[1].message.attachments[1].type}}",
+                                                            "b": "video",
+                                                            "o": "text:equal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "{{1.entry[1].messaging[1].message.attachments[1].payload.url}}",
+                                                "gzip": true,
+                                                "method": "get",
+                                                "headers": [],
+                                                "useMtls": false,
+                                                "serializeUrl": false,
+                                                "serveRawData": false,
+                                                "shareCookies": false,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 900,
+                                                    "y": 450
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 24,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://generativelanguage.googleapis.com/v1beta/models/{{2.GEMINI_MODEL}}:generateContent",
+                                                "data": "{\"systemInstruction\":{\"parts\":[{\"text\":\"{{2.BUSINESS_RULES}} প্রোডাক্টের ডেটা সংযুক্ত ফাইলে আছে, শুধু সেখান থেকে তথ্য দাও। ডবল কোটেশন চিহ্ন কখনো ব্যবহার করো না।\"}]},\"contents\":[{\"role\":\"user\",\"parts\":[{\"inline_data\":{\"mime_type\":\"text/plain\",\"data\":\"{{toString(13.data; base64)}}\"}},{\"inline_data\":{\"mime_type\":\"video/mp4\",\"data\":\"{{toString(23.data; base64)}}\"}},{\"text\":\"কাস্টমার ভিডিও পাঠিয়েছে। ভিডিওতে কী দেখা/শোনা যাচ্ছে বুঝে প্রাসঙ্গিক উত্তর দাও।\"}]}],\"generationConfig\":{\"temperature\":0.4}}",
+                                                "gzip": true,
+                                                "method": "post",
+                                                "headers": [
+                                                    {
+                                                        "name": "x-goog-api-key",
+                                                        "value": "{{2.GEMINI_KEY}}"
+                                                    }
+                                                ],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "raw",
+                                                "contentType": "application/json",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1200,
+                                                    "y": 450
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "id": 25,
+                                            "module": "http:ActionSendData",
+                                            "version": 3,
+                                            "parameters": {
+                                                "handleErrors": false
+                                            },
+                                            "mapper": {
+                                                "qs": [],
+                                                "url": "https://graph.facebook.com/v21.0/me/messages",
+                                                "gzip": true,
+                                                "fields": [
+                                                    {
+                                                        "name": "recipient",
+                                                        "value": "{\"id\":\"{{1.entry[1].messaging[1].sender.id}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "messaging_type",
+                                                        "value": "RESPONSE"
+                                                    },
+                                                    {
+                                                        "name": "message",
+                                                        "value": "{\"text\":\"{{replace(replace(24.data.candidates[1].content.parts[1].text; \"/([\"\"\\\\])/g\"; \"\\\\$1\"); \"/\\r?\\n\\r?/g\"; \"\\n\")}}\"}"
+                                                    },
+                                                    {
+                                                        "name": "access_token",
+                                                        "value": "{{2.PAGE_TOKEN}}"
+                                                    }
+                                                ],
+                                                "method": "post",
+                                                "headers": [],
+                                                "timeout": "",
+                                                "useMtls": false,
+                                                "bodyType": "x_www_form_urlencoded",
+                                                "serializeUrl": false,
+                                                "shareCookies": false,
+                                                "parseResponse": true,
+                                                "followRedirect": true,
+                                                "useQuerystring": false,
+                                                "followAllRedirects": false,
+                                                "rejectUnauthorized": true
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 1500,
+                                                    "y": 450
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
